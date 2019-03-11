@@ -68,9 +68,11 @@
                 return res;
             }
 
+            var tindex=1;//需要显示的时间轴数组的维度，范围是0-4
+
             var series = [];// 3D飞线
             var dser = [];  // 2D散点坐标
-            for(var i=0;i<Data.data.length;i++)
+            for(var i=0;i<Data.timeBins[tindex].data.length;i++)
             {
                 dser.push(
                     {
@@ -92,9 +94,9 @@
                             }
                         },
                         data: [{
-                            name: Data.data[i].e,
-                            value: geoCoordMap[Data.data[i].e],
-                            symbolSize: Data.data[i].v / 4
+                            name: Data.timeBins[tindex].data[i].e,
+                            value: geoCoordMap[Data.timeBins[tindex].data[i].e],
+                            symbolSize: Data.timeBins[tindex].data[i].v / 4
                         }
                         ]
                     },
@@ -119,8 +121,8 @@
                             }
                         },
                         data: [{
-                            name: Data.data[i].i,
-                            value: geoCoordMap[Data.data[i].i],
+                            name: Data.timeBins[tindex].data[i].i,
+                            value: geoCoordMap[Data.timeBins[tindex].data[i].i],
                             symbolSize:parseInt(Math.random()*20+10),
                             label: {
                                 normal: {
@@ -143,7 +145,7 @@
                         width: 1,
                         opacity: 0.6
                     },
-                    data: convertData(Data.data)// 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
+                    data: convertData(Data.timeBins[tindex].data)// 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
                 })
 
             console.log(dser);

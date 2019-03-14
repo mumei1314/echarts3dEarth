@@ -8,7 +8,7 @@
         body{
             height:100%;
             margin:0;
-            background:url('img/timg.jpg') center/cover no-repeat;
+            background:url('img/timg.png') center/cover no-repeat;
         }
         #container{
             height:100%;
@@ -21,7 +21,10 @@
     <script type="text/javascript" src="js/jquery.js"></script>
 </head>
 <body>
-    <div id="container"></div>
+    <div id="container">
+
+    </div>
+
     <script>
         //数据处理
         /*
@@ -55,98 +58,198 @@
             '英国': [-0.126608, 51.208425],
             '加拿大': [-102.646409, 59.994255]
         };
-        $.getJSON("data/all.json", function (Data){
-            var convertData = function(data) {
+        let json = $.getJSON("data/all.json", function (data){
+            //函数sel选择需要显示的数据，其中tim表示时间，范围是2015-2019，pla表示地点
+            // dir表示方向，取值为"i"或"e"，cla表示类别，取值为"pos"、"neg"、"neu"
+            //结果存在dat数组中
+            var dser = [];  // 2D散点坐标
+            var maxsize=50;//散点最大尺寸，即被分析的某国散点尺寸，其他国家散点尺寸按比例设置
+
+            //定义函数，筛选在特定时间，针对某一国家输入或输出特定感情取向的新闻流动数据
+            function sel(tim,pla,dir,cla){//tim：时间 pla:国家 dir:流动方向 cla：感情取向
+                var dat=[];
+                var datain=data.timeBins[tim-2015].data;
+                console.log(datain);
+                var vtol=0;
+                //函数功能为设置散点标签为pla，散点大小为size
+                function setdserp(pla,size){
+                    dser.push(
+                        //被统计国家对应的散点
+                        {
+                            type: 'effectScatter',
+                            coordinateSystem: 'geo',
+                            zlevel: 3,
+                            rippleEffect: {
+                                brushType: 'stroke'
+                            },
+                            label: {
+                                fontSize:24, //标签的字号
+                                show: true,
+                                position: 'left',
+                                formatter: '{b}'  //标签内容格式器，a：系列名，b:数据名，c：数据值
+                            },
+                            itemStyle: {
+                                normal: {
+                                    color: '#FFF'  //散点的颜色
+                                }
+                            },
+                            data: [{
+                                name: pla,    //散点的name为国家名
+                                value: geoCoordMap[pla], //散点的value为该点的经纬度
+                                symbolSize: size   //散点对应的大小
+                            }]
+                        }
+                    );
+                }
+
+                //函数功能为设置散点标签为size，散点大小为1
+                function setdsers(size){
+                    dser.push(
+                        //被统计国家对应的散点
+                        {
+                            type: 'effectScatter',
+                            coordinateSystem: 'geo',
+                            zlevel: 3,
+                            rippleEffect: {
+                                brushType: 'stroke'
+                            },
+                            label: {
+                                fontSize:30, //标签的字号
+                                show: true,
+                                position: [30,0],
+                                formatter: '{b}',  //标签内容格式器，a：系列名，b:数据名，c：数据值
+                                color: '#FFF',
+                                fontFamily: 'Arial',
+                                borderWidth: 3,
+                                backgroundColor: 'rgba(0,23,11,0.3)',
+                                padding: [5, 10, 10, 5],
+                                lineHeight: 30
+                            },
+                            itemStyle: {
+                                normal: {
+                                    color: '#FFF'  //散点的颜色
+                                }
+                            },
+                            data: [{
+                                name: size,    //散点的name为散点大小
+                                value: geoCoordMap[pla], //散点的value为该点的经纬度
+                                symbolSize: 1   //散点对应的大小
+                            }]
+                        }
+                    );
+                }
+
+                //设置被统计国家的地名散点
+                setdserp(pla,maxsize);
+
+                //如果统计某国的输入
+                if(dir=="i"){
+                    //选出所需数据
+                    for(var i=0;i<datain.length;i++){
+                        if(datain[i].i==pla&&datain[i].c==cla){
+                            dat.push({
+                                i:datain[i].i,
+                                e:datain[i].e,
+                                c:datain[i].c,
+                                v:datain[i].v
+                            });
+                            //计算总输入值
+                            vtol+=datain[i].v;
+                        }
+                    }
+                    //设置被统计国家的数值散点
+                    setdsers(vtol);
+
+                    //输出的散点
+                    for(var i=0;i<dat.length;i++)
+                    {
+                        val=dat[i].v; //每个被关注流动的实际数值
+                        //按比例计算散点的大小
+                        size=Math.round(maxsize*val/vtol);
+                        pla=dat[i].e;
+
+                        //设置每个输出国家的地名散点
+                        setdserp(pla,size);
+
+                        //设置每个输出国家的数值散点
+                        setdsers(val);
+
+                    }
+                }
+                //如果统计某国的输出
+                else{
+                    //统计所需数据
+                    for(var i=0;i<datain.length;i++){
+                        if(datain[i].e==pla&&datain[i].c==cla){
+                            dat.push({
+                                i:datain[i].i,
+                                e:datain[i].e,
+                                c:datain[i].c,
+                                v:datain[i].v
+                            });
+                            //计算总输出值
+                            vtol+=datain[i].v;
+                        }
+                    }
+
+                    //设置被统计国家的数值散点
+                    setdsers(vtol);
+
+                    //输入的散点
+                    for(var i=0;i<dat.length;i++)
+                    {
+                        val=dat[i].v; //每个被关注流动的实际数值
+                        //按比例计算散点的大小
+                        size=Math.round(maxsize*val/vtol);
+                        pla=dat[i].i;
+
+                        //设置每个被输入国家的地名散点
+                        setdserp(pla,size);
+
+                        //设置每个被输入国家的数值散点
+                        setdsers(val);
+                    }
+                }
+                return dat;
+            }
+            var Data=sel(2016,"日本","e","pos");//取数据为2016年，国家为日本，方向输出，类型正面
+            console.log(Data);
+            var convertData = function(d) {
                 var res = [];
-                for(var i = 0; i < data.length; i++) {
-                    var fromCoord = geoCoordMap[data[i].e];
-                    var toCoord = geoCoordMap[data[i].i];
+                    var fromCoord = geoCoordMap[d.e];
+                    var toCoord = geoCoordMap[d.i];
                     if(fromCoord && toCoord) {
                         res.push([fromCoord, toCoord]);
                     }
-                }
                 return res;
             }
 
-            var tindex=1;//需要显示的时间轴数组的维度，范围是0-4
-
             var series = [];// 3D飞线
-            var dser = [];  // 2D散点坐标
-            for(var i=0;i<Data.timeBins[tindex].data.length;i++)
+            var vtol=0;  //vtol为总value值，通过下面的循环计算
+            var lcolor={pos:"#66CC99",neg:"red",nue:"blue"};//不同情况的线条颜色，正面为绿色，负面为红色，中性为蓝色
+            for(var i=0;i<Data.length;i++) {
+                //计算总的value值
+                vtol+=Data[i].v;
+            }
+            //统计飞线数据
+            for(var i=0;i<Data.length;i++)
             {
-                dser.push(
+                series.push(
                     {
-                        type: 'effectScatter',
-                        coordinateSystem: 'geo',
-                        zlevel: 3,
-                        rippleEffect: {
-                            brushType: 'stroke'
-                        },
-                        label: {
-                            fontSize:24,
+                        type: 'lines3D',
+                        effect: {
                             show: true,
-                            position: 'right',
-                            formatter: '{b}'
+                            period: 3,//周期，数值越小越块
+                            trailLength: Data[i].v/vtol//尾部阴影，范围0-1，用当前线条v值除以总v值，当前流动占总数的比例
                         },
-                        itemStyle: {
-                            normal: {
-                                color: '#f5f802'
-                            }
+                        lineStyle: {//航线的视图效果
+                            color: lcolor[Data[i].c],
+                            width: 1,
+                            opacity: 0.6
                         },
-                        data: [{
-                            name: Data.timeBins[tindex].data[i].e,
-                            value: geoCoordMap[Data.timeBins[tindex].data[i].e],
-                            symbolSize: Data.timeBins[tindex].data[i].v / 4
-                        }
-                        ]
-                    },
-                    {
-                        type: 'effectScatter',
-                        coordinateSystem: 'geo',
-                        zlevel: 3,
-                        rippleEffect: {
-                            brushType: 'stroke'
-                        },
-                        label: {
-                            normal: {
-                                show: true,
-                                position: 'left',
-                                fontSize:18,
-                                formatter: '{b}'
-                            }
-                        },
-                        itemStyle: {
-                            normal: {
-                                color: '#ff0000'
-                            }
-                        },
-                        data: [{
-                            name: Data.timeBins[tindex].data[i].i,
-                            value: geoCoordMap[Data.timeBins[tindex].data[i].i],
-                            symbolSize:parseInt(Math.random()*20+10),
-                            label: {
-                                normal: {
-                                    position: 'right'
-                                }
-                            }
-                        }]
+                        data: convertData(Data[i])// 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
                     })
             }
-            series.push(
-                {
-                    type: 'lines3D',
-                    effect: {
-                        show: true,
-                        period: 3,//速度
-                        trailLength: 0.1//尾部阴影
-                    },
-                    lineStyle: {//航线的视图效果
-                        color: '#9ae5fc',
-                        width: 1,
-                        opacity: 0.6
-                    },
-                    data: convertData(Data.timeBins[tindex].data)// 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
-                })
 
             console.log(dser);
             console.log(series);

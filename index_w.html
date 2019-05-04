@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>“一带一路”国家间新闻流动可视化</title>
+    <title>“一带一路”国家间新闻报道可视化交互系统</title>
     <style>
         html{height:100%;}
         body{
@@ -14,16 +14,17 @@
             position:absolute;
             width:800px;
             color:#FFF;
-            font-size:30px;
+            font-size:24px;
             top:10px;
             left:20px;
         }
         #text p{
             position: absolute;
-            left:60px;
-            top:80px;
-            color:#FFF;
-            font-size:20px;
+            left: 40px;
+            top: 60px;
+            color: #FFF;
+            font-size: 14px;
+            width: 800px;
         }
         #text{
             position: absolute;
@@ -33,9 +34,10 @@
             position: absolute;
             height: 50px;
             width: 500px;
-            background-color:rgba(43,43,43,0.9);
-            bottom:1%;
-            left:430px;
+            background-color: rgba(43,43,43,0.9);
+            bottom: 1%;
+            left: 50%;
+            margin-left: -250px;
         }
         #history ul {
             list-style-type:none;
@@ -64,10 +66,12 @@
             bottom:10px;
         }
         #hudButtons{
-            display: none;
+            display: block;
             position: absolute;
             top: 30px;
             width: 489px;
+            left: 100%;
+            margin-left: -500px;
 
         }
         #hudButtons .countryTextInput {
@@ -135,11 +139,13 @@
 
         }
         #importExportBtns {
-            width:298px;
-            position:absolute;
-            bottom:0px;
-            color:white;
-            display:none;
+            width: 298px;
+            position: absolute;
+            bottom: 0px;
+            color: white;
+            display: block;
+            left: 100%;
+            margin-left: -300px;
         }
         #importExportBtns>div>div {
             float:left;
@@ -235,19 +241,18 @@
         }
         #data{
             z-index: 100;
-            width: 20%;
-            min-width: 150px;
-            height: 300px;
+            width: 290px;
+            height: 330px;
             position: absolute;
             top: 25%;
             left: 2%;
-            background-color: rgba(255,255,255,0.5);
+            background-color: rgba(255,255,255,0.3);
             padding: 10px;
+            font-weight: bold;
         }
         #dataRight{
             z-index: 100;
-            width: 250px;
-            min-width: 150px;
+            width: 270px;
             height: 330px;
             position: absolute;
             top: 25%;
@@ -255,14 +260,17 @@
             background-color: rgba(0,0,0,0.5);
             padding: 10px;
         }
-        #drDiv1,#drDiv2{
-            height: 100px;
+        #drDiv1_1,#drDiv1_2,#drDiv2_1,#drDiv2_2{
+            min-height: 101px;
             margin: 1px;
-            border-top: 1px solid white;;
-            overflow: auto;
+            position: relative;
+            width: 260px;
+            /*滚轮*/
+            /*height: 101px;
+            overflow: auto;*/
         }
         .linePos,.lineNeu,.lineNeg{
-            width: 200px;
+            width: 260px;
             margin: 2px;
             padding: 0px 5px;
         }
@@ -277,6 +285,12 @@
         }
         .drp{
             color: white;
+            border-bottom: 1px solid white;
+            margin: 8px 0px;
+            padding: 8px 0px;
+        }
+        #drDiv1,#drDiv2{
+            overflow:hidden; height:101px; width:270px; margin:0; position:relative;
         }
     </style>
     <script type="text/javascript" src="js/echarts.min.js"></script>
@@ -286,8 +300,8 @@
 </head>
 <body>
     <div id="text">
-        <h1>“一带一路”相关国家间的新闻流通</h1>
-        <p>自2019年4月8日-2019年4月12日</p>
+        <h1>“一带一路”国家间新闻报道可视化交互系统</h1>
+        <p>自2019年4月8日至2019年4月12日</p>
     </div>
     <div id="container">
     </div>
@@ -301,7 +315,7 @@
             <div id="handle" class="noMapDrag ui-draggable"style="left: 222px"></div>
         </ul>
     </div>
-    <div class="overlayCountries noPointer" id="hudButtons" style="left: 800px; display: block;">
+    <div class="overlayCountries noPointer" id="hudButtons">
         <input type="button" value="查询" id="btnSearch" class="searchBtn armsBtn pointer">
         <input type="text" name="country" id="countries"
                class="countryTextInput pointer noMapDrag ui-autocomplete-input" value="中国"
@@ -309,7 +323,7 @@
         <ul id="data_list" class="list"></ul>
         <br class="clear">
     </div>
-    <div id="importExportBtns" class="overlayCountries" style="left: 1073px; display: block;">
+    <div id="importExportBtns" class="overlayCountries">
         <div class="typeLabels">
             <div class="mil">正面</div>
             <div class="civ">中性</div>
@@ -330,31 +344,46 @@
         <br class="clear">
     </div>
     <div id="data">
-        <p id="countryName">中国<label id="dataAll"></label></p>
-        <p>输入<label id="dataIn"></label></p>
-        <p>正面：<label id="dataInPos"></label></p>
-        <p>中性：<label id="dataInNeu"></label></p>
-        <p>负面：<label id="dataInNeg"></label></p>
-        <p>输出<label id="dataOut"></label></p>
-        <p>正面：<label id="dataOutPos"></label></p>
-        <p>中性：<label id="dataOutNeu"></label></p>
-        <p>负面：<label id="dataOutNeg"></label></p>
+        <div style="margin: 0;font-size: large;border-bottom: 2px solid #fff;text-align: center;padding: 5px;color: white;height: 30px;">
+            <p style="margin: 0;position: relative;top: 0px;height: 0;color: white;float: left;"><label id="countryName"></label></p>
+            <p style="position: relative;top: -18px;height: 0;float: right;color: white;">报道总量：<label id="dataAll"></label></p>
+        </div>
+        <div style="font-size: medium;margin: 5px auto 0px auto;color: white;">
+            <p>被报道（输入）总量:</p>
+            <p style="position: relative;top: -46px;float: right;"><label id="dataIn"></label></p>
+        </div>
+        <p style="margin:10px auto 10px 15px;color: greenyellow;">正面：<label id="dataInPos"></label></p>
+        <p style="margin:10px auto 10px 15px;color: wheat;">中性：<label id="dataInNeu"></label></p>
+        <p style="margin:10px auto 10px 15px;color: #CC3333;">负面：<label id="dataInNeg"></label></p>
+        <div style="font-size: medium;margin: 0px auto 0px auto;color: white;">
+            <p>报道国（输出）总量:</p>
+            <p style="position: relative;top: -46px;float: right;"><label id="dataOut"></label></p>
+        </div>
+        <p style="margin:10px auto 10px 15px;color: greenyellow;">正面：<label id="dataOutPos"></label></p>
+        <p style="margin:10px auto 10px 15px;color: wheat;">中性：<label id="dataOutNeu"></label></p>
+        <p style="margin:10px auto 10px 15px;color: #CC3333;">负面：<label id="dataOutNeg"></label></p>
     </div>
     <div id="dataRight">
         <!-- <input type="text" id="drsearch" style="width: 100px;"></input>
         <input type="button" id="btndrsearch" value="搜索"></input>
         <input type="button" id="btndrsearchAll" value="全部"></input> -->
-        <p class="drp">输入</p>
+        <p class="drp">被报道（输入）信息</p>
         <div id="drDiv1">
-            <!-- <p class="linePos">中国-俄罗斯   4</p>
-            <p class="lineNeu">中国-俄罗斯   1</p>
-            <p class="lineNeg">中国-俄罗斯   15</p> -->
+            <div id="drDiv1_1">
+                <!-- <p class="linePos">中国-俄罗斯   4</p>
+                <p class="lineNeu">中国-俄罗斯   1</p>
+                <p class="lineNeg">中国-俄罗斯   15</p> -->
+            </div>
+            <div id="drDiv1_2"></div>
         </div>
-        <p class="drp">输出</p>
+        <p class="drp">报道国（输出）信息</p>
         <div id="drDiv2">
-            <!-- <p class="linePos">中国-俄罗斯   4</p>
-            <p class="lineNeu">中国-俄罗斯   1</p>
-            <p class="lineNeg">中国-俄罗斯   15</p> -->
+            <div id="drDiv2_1">
+                <!-- <p class="linePos">中国-俄罗斯   4</p>
+                <p class="lineNeu">中国-俄罗斯   1</p>
+                <p class="lineNeg">中国-俄罗斯   15</p> -->
+            </div>
+            <div id="drDiv2_2"></div>
         </div>
     </div>
     <script>
@@ -386,6 +415,43 @@
                     window.location.href="index.html"+"?"+"c="+counName+"&"+"y="+year+"&"+cg+"_"+dg+"_"+eg+"_"+ag+"_"+gg+"_"+fg+"_"+hg+"_"+bg;
                 }
             }
+            
+            //滚动
+            var speed = 100;
+            var drDiv1=document.getElementById("drDiv1");
+            var drDiv1_1=document.getElementById("drDiv1_1");
+            var drDiv1_2=document.getElementById("drDiv1_2");
+            var drDiv2=document.getElementById("drDiv2");
+            var drDiv2_1=document.getElementById("drDiv2_1");
+            var drDiv2_2=document.getElementById("drDiv2_2");
+            drDiv1_2.innerHTML = drDiv1_1.innerHTML;
+            drDiv2_2.innerHTML = drDiv2_1.innerHTML;
+            // console.log(drDiv1.offsetHeight);
+            // console.log(drDiv2.offsetHeight);
+            // console.log(drDiv1_1.offsetHeight);
+            // console.log(drDiv2_1.offsetHeight);
+            function Marquee(){
+                if(drDiv1.scrollTop>=drDiv1_1.offsetHeight){
+                    drDiv1.scrollTop=0;
+                }
+                else{
+                    drDiv1.scrollTop=drDiv1.scrollTop+1;
+                }
+            }
+            function Marquee2(){
+                if(drDiv2.scrollTop>=drDiv2_1.offsetHeight){
+                    drDiv2.scrollTop=0;
+                }
+                else{
+                    drDiv2.scrollTop=drDiv2.scrollTop+1;
+                }
+            }
+            var MyMar=setInterval(Marquee,speed);
+            drDiv1.onmouseover=function(){clearInterval(MyMar)};
+            drDiv1.onmouseout=function(){MyMar=setInterval(Marquee,speed); };
+            var MyMar2=setInterval(Marquee2,speed);
+            drDiv2.onmouseover=function(){clearInterval(MyMar2)};
+            drDiv2.onmouseout=function(){MyMar2=setInterval(Marquee2,speed); };
 
             //情感&方向 （奇数-可见；偶数-不可见）
             var btnTest1=document.getElementById("label1");
@@ -515,32 +581,140 @@
                 window.location.href="index.html"+"?"+"c="+counName+"&"+"y="+year+"&"+cg+"_"+dg+"_"+eg+"_"+ag+"_"+gg+"_"+fg+"_"+hg+"_"+bg;
             }
 
-            var btndrsearch=document.getElementById("btndrsearch");
-            btndrsearch.onclick=function(e){
-            }
+            // var btndrsearch=document.getElementById("btndrsearch");
+            // btndrsearch.onclick=function(e){
+            // }
         }
     </script>
     <!--输入框-->
     <script>
         var data = [
-            "中国", "马达加斯加", "巴拿马", "摩洛哥", "印度",
-            "埃塞俄比亚", "新西兰", "波黑", "黑山", "土库曼斯坦",
-            "立陶宛","拉脱维亚","巴勒斯坦","阿尔巴尼亚","阿富汗",
-            "爱沙尼亚","巴基斯坦","斯洛文尼亚","克罗地亚","黎巴嫩",
-            "阿曼","巴林","也门","埃及","约旦","叙利亚","印度尼西亚",
-            "菲律宾","缅甸","文莱","东帝汶","不丹","阿联酋","泰国",
-            "越南","新加坡","以色列","阿塞拜疆","亚美尼亚","捷克","孟加拉国",
-            "白俄罗斯", "柬埔寨","格鲁吉亚","匈牙利","伊拉克","伊朗","吉尔吉斯斯坦",
-            "老挝","哈萨克斯坦","卡塔尔","科威特","摩尔多瓦","马尔代夫","马来西亚",
-            "马其顿","蒙古国","尼泊尔","波兰","保加利亚","罗马尼亚","塞尔维亚","沙特阿拉伯",
-            "斯洛伐克","塔吉克斯坦","俄罗斯","南非","斯里兰卡","韩国","土耳其","乌克兰","乌兹别克斯坦",
-            "巴巴多斯","瓦努阿图","汤加","库克群岛","厄瓜多尔","葡萄牙","斐济","密克罗尼西亚联邦",
-            "马耳他", "萨尔瓦多","多米尼加","智利","萨摩亚","苏里南","格林纳达","委内瑞拉","多哥","冈比亚",
-            "乌干达","佛得角","布隆迪","坦桑尼亚","津巴布韦","刚果（布）","乍得","尼日利亚","肯尼亚",
-            "安哥拉", "纳米比亚","加蓬","莫桑比克","赞比亚","加纳","塞舌尔","南苏丹","喀麦隆","塞拉利昂",
-            "科特迪瓦", "阿尔及利亚","哥斯达黎加","吉布提","毛里塔尼亚","几内亚","索马里","希腊","乌拉圭",
-            "纽埃","多米尼克","圭亚那","卢旺达","塞内加尔","突尼斯","利比亚","巴布亚新几内亚","玻利维亚",
-            "安提瓜和巴布达","特立尼达和多巴哥","奥地利","苏丹","意大利","古巴","卢森堡","牙买加"
+            "苏丹",
+            "南非",
+            "塞内加尔",
+            "塞拉利昂",
+            "科特迪瓦",
+            "索马里",
+            "喀麦隆",
+            "南苏丹",
+            "塞舌尔",
+            "几内亚",
+            "加纳",
+            "赞比亚",
+            "莫桑比克",
+            "加蓬",
+            "纳米比亚",
+            "毛里塔尼亚",
+            "安哥拉",
+            "吉布提",
+            "埃塞俄比亚",
+            "肯尼亚",
+            "尼日利亚",
+            "乍得",
+            "刚果布",
+            "津巴布韦",
+            "阿尔及利亚",
+            "坦桑尼亚",
+            "布隆迪",
+            "佛得角",
+            "乌干达",
+            "冈比亚",
+            "多哥",
+            "卢旺达",
+            "摩洛哥",
+            "马达加斯加",
+            "突尼斯",
+            "利比亚",
+            "埃及",
+            "韩国",
+            "蒙古",
+            "新加坡",
+            "东帝汶",
+            "马来西亚",
+            "缅甸",
+            "柬埔寨",
+            "越南",
+            "老挝",
+            "文莱",
+            "巴基斯坦",
+            "斯里兰卡",
+            "孟加拉国",
+            "尼泊尔",
+            "马尔代夫",
+            "阿联酋",
+            "科威特",
+            "土耳其",
+            "卡塔尔",
+            "阿曼",
+            "黎巴嫩",
+            "沙特阿拉伯",
+            "巴林",
+            "伊朗",
+            "伊拉克",
+            "阿富汗",
+            "阿塞拜疆",
+            "格鲁吉亚",
+            "亚美尼亚",
+            "哈萨克斯坦",
+            "吉尔吉斯斯坦",
+            "塔吉克斯坦",
+            "乌兹别克斯坦",
+            "泰国",
+            "印度尼西亚",
+            "菲律宾",
+            "俄罗斯",
+            "奥地利",
+            "希腊",
+            "波兰",
+            "塞尔维亚",
+            "捷克",
+            "保加利亚",
+            "斯洛伐克",
+            "阿尔巴尼亚",
+            "克罗地亚",
+            "波黑",
+            "黑山",
+            "爱沙尼亚",
+            "立陶宛",
+            "斯洛文尼亚",
+            "匈牙利",
+            "马其顿",
+            "罗马尼亚",
+            "拉脱维亚",
+            "乌克兰",
+            "白俄罗斯",
+            "摩尔多瓦",
+            "马耳他",
+            "葡萄牙",
+            "意大利",
+            "卢森堡",
+            "新西兰",
+            "巴布亚新几内亚",
+            "萨摩亚",
+            "纽埃",
+            "斐济",
+            "密克罗尼西亚联邦",
+            "库克群岛",
+            "汤加",
+            "瓦努阿图",
+            "智利",
+            "圭亚那",
+            "玻利维亚",
+            "乌拉圭",
+            "委内瑞拉",
+            "苏里南",
+            "厄瓜多尔",
+            "哥斯达黎加",
+            "巴拿马",
+            "萨尔瓦多",
+            "多米尼加",
+            "特立尼达和多巴哥",
+            "安提瓜和巴布达",
+            "多米尼克",
+            "格林纳达",
+            "巴巴多斯",
+            "古巴",
+            "牙买加"
         ]
         var ele_key = document.getElementById("countries");
         ele_key.onkeyup = function (e) {
@@ -550,7 +724,7 @@
             //获取输入框里匹配的数据
             var srdata = [];
             for (var i = 0; i < data.length; i++) {
-                console.log(data[i].indexOf(val))
+                // console.log(data[i].indexOf(val));
                 if (val.trim().length > 0 && data[i].indexOf(val) > -1) {
                     srdata.push(data[i]);
                 }
@@ -684,7 +858,7 @@
         var pointsData=[]; //用于保存每一个需要被筛选的散点名称、经纬度和大小
         var pointsDatav=[]; //用于保存每一个需要被筛选的散点新闻数、经纬度，大小为1
         var vtol=0;//针对某国特定类型的流入或流出新闻总数
-        var lcolor={pos:"#006600",neg:"#CC3333",neu:"#9ae5fc"};//不同情况的线条颜色，正面为绿色，负面为红色，中性为蓝色
+        var lcolor={pos:"greenyellow",neg:"#CC3333",neu:"white"};//不同情况的线条颜色，正面为绿色，负面为红色，中性为蓝色
 
         //各国的经纬度数据
         var geoCoordMap = {
@@ -692,16 +866,13 @@
             '马达加斯加': [47.479371,-18.827917],
             '巴拿马': [-79.351593,9.26581],
             '摩洛哥': [-6.792655,34.107995],
-            '印度': [77.099019,28.747507],
             '埃塞俄比亚': [38.685463,9.119557],
             '新西兰': [174.82546,-41.277039],
             '波黑': [18.411642,43.87268],
             '黑山': [19.184329,42.44509],
-            '土库曼斯坦': [58.370571,37.991019],
-
             '立陶宛': [25.292231,54.692755],
             '拉脱维亚': [24.114804,57.050284],
-            '巴勒斯坦': [35.206074,31.771513],
+
             '阿尔巴尼亚': [19.814436,41.380108],
             '阿富汗': [69.192781,34.543017],
             '爱沙尼亚': [24.597733,59.496542],
@@ -709,29 +880,23 @@
             '斯洛文尼亚': [14.47922,46.072787],
             '克罗地亚': [15.951004,45.816092],
             '黎巴嫩': [35.488933,34.054415],
-
             '阿曼': [58.448759,23.6461],
             '巴林': [50.574716,26.262399],
-            '也门': [44.172457,15.386086],
             '埃及': [31.183965,30.108445],
-            '约旦': [35.967263,31.96189],
-            '叙利亚': [36.261619,33.60915],
+
             '印度尼西亚': [106.760061,-6.175051],
             '菲律宾': [120.999569,14.65294],
             '缅甸': [96.089629,17.110033],
             '文莱': [114.744488,4.99407],
-
             '东帝汶': [125.562098,-8.526035],
-            '不丹': [89.595383,27.499741],
             '阿联酋': [54.603724,24.406541],
             '泰国': [100.486583,13.863379],
             '越南': [105.785004,21.062193],
             '新加坡': [103.834891,1.481017],
-            '以色列': [35.206074,31.771513],
             '阿塞拜疆': [49.930811,40.52929],
+
             '亚美尼亚': [44.448416,40.219729],
             '捷克': [14.27685,50.124424],
-
             '孟加拉国': [90.441659,23.832405],
             '白俄罗斯': [27.596492,53.977821],
             '柬埔寨': [104.865139,11.660317],
@@ -740,20 +905,20 @@
             '伊拉克': [44.301238,33.30071],
             '伊朗': [51.292211,35.736894],
             '吉尔吉斯斯坦': [74.472805,42.980999],
+
             '老挝': [102.583874,18.098099],
             '哈萨克斯坦': [71.455648,51.292566],
-
             '卡塔尔': [51.512978,25.446698],
             '科威特': [47.907108,29.5148],
             '摩尔多瓦': [28.70033,47.049904],
             '马尔代夫': [73.516145,4.255613],
             '马来西亚': [101.700804,3.294564],
             '马其顿': [21.415001,42.055536],
-            '蒙古国': [106.925636,47.922842],
+            '蒙古': [106.925636,47.922842],
             '尼泊尔': [85.290415,27.860076],
+
             '波兰': [20.899876,52.318978],
             '保加利亚': [23.181141,42.737368],
-
             '罗马尼亚': [26.124709,44.501492],
             '塞尔维亚': [20.458341,44.868995],
             '沙特阿拉伯': [46.729681,24.743043],
@@ -762,9 +927,9 @@
             '俄罗斯': [37.512635,55.728904],
             '南非': [28.01963,-25.564709],
             '斯里兰卡': [79.973597,7.001734],
+
             '韩国': [126.997087,37.706538],
             '土耳其': [32.876517,39.951229],
-
             '乌克兰': [30.595252,50.419205],
             '乌兹别克斯坦': [69.376754,41.463198],
             '巴巴多斯': [-59.599221,13.129419],
@@ -773,9 +938,9 @@
             '库克群岛': [-159.766694,-21.199574],
             '厄瓜多尔': [-78.535052,-0.146485],
             '葡萄牙': [-9.175547,38.882766],
+
             '斐济': [178.467682,-18.105884],
             '密克罗尼西亚联邦': [158.161665,6.925909],
-
             '马耳他': [14.505223,35.899862],
             '萨尔瓦多': [-89.208388,13.706045],
             '多米尼加': [-80.248904,22.58678],
@@ -784,20 +949,20 @@
             '苏里南': [-55.19469,5.943586],
             '格林纳达': [-61.714232,12.088437],
             '委内瑞拉': [-66.879273,10.474519],
+
             '多哥': [1.061944,8.758247],
             '冈比亚': [-15.891165,13.472079],
-
             '乌干达': [32.548918,0.467073],
             '佛得角': [-23.507646,14.979604],
             '布隆迪': [29.973296,-3.346662],
             '坦桑尼亚': [34.958964,-5.857308],
             '津巴布韦': [30.948353,-17.760259],
-            '刚果（布）': [23.221488,-1.903469],
+            '刚果布': [23.221488,-1.903469],
             '乍得': [18.658959,16.032139],
             '尼日利亚': [7.031867,9.31608],
+
             '肯尼亚': [37.57138,0.541161],
             '安哥拉': [16.819229,-12.110017],
-
             '纳米比亚': [16.892818,-22.348526],
             '加蓬': [11.557602,-0.644268],
             '莫桑比克': [34.480634,-18.463988],
@@ -806,9 +971,9 @@
             '塞舌尔': [55.453552,-4.676951],
             '南苏丹': [31.520852,5.10074],
             '喀麦隆': [11.465616,3.909217],
+
             '塞拉利昂': [-11.880554,8.602632],
             '科特迪瓦': [-5.257527,6.850062],
-
             '阿尔及利亚': [2.515331,28.125468],
             '哥斯达黎加': [-84.154335,10.064525],
             '吉布提': [42.603041,11.77365],
@@ -817,9 +982,9 @@
             '索马里': [45.049881,3.465607],
             '希腊': [23.8194,38.016504],
             '乌拉圭': [-55.877689,-32.525353],
+
             '纽埃': [-169.867341,-18.993713],
             '多米尼克': [-61.395183,15.350947],
-
             '圭亚那': [-58.985137,5.04078],
             '卢旺达': [29.815711,-2.115772],
             '塞内加尔': [-15.073693,14.684851],
@@ -828,9 +993,9 @@
             '巴布亚新几内亚': [143.58629,-6.142244],
             '玻利维亚': [-65.315016,-16.423831],
             '安提瓜和巴布达': [-61.865523,17.141551],
+
             '特立尼达和多巴哥': [-61.506775,10.6571291],
             '奥地利': [14.558544,47.858269],
-
             '苏丹': [32.698279,15.649772],
             '意大利':[12.475639,41.980937],
             '古巴':[-82.491207,23.163219],
@@ -1056,34 +1221,310 @@
                 // console.log(dataOutPos);
                 // console.log(dataOutNeu);
                 // console.log(dataOutNeg);
+                document.getElementById("countryName").innerHTML=""+counName;
                 document.getElementById("dataAll").innerHTML=""+cAll;
-                document.getElementById("dataIn").innerHTML=""+cIn+"["+(cIn/cAll*100).toFixed(2)+"%]";
-                document.getElementById("dataOut").innerHTML=""+cOut+"["+(cOut/cAll*100).toFixed(2)+"%]";
-                document.getElementById("dataInPos").innerHTML=""+cInPos+"["+(cInPos/cIn*100).toFixed(2)+"%]";
-                document.getElementById("dataInNeu").innerHTML=""+cInNeu+"["+(cInNeu/cIn*100).toFixed(2)+"%]";
-                document.getElementById("dataInNeg").innerHTML=""+cInNeg+"["+(cInNeg/cIn*100).toFixed(2)+"%]";
-                document.getElementById("dataOutPos").innerHTML=""+cOutPos+"["+(cOutPos/cOut*100).toFixed(2)+"%]";
-                document.getElementById("dataOutNeu").innerHTML=""+cOutNeu+"["+(cOutNeu/cOut*100).toFixed(2)+"%]";
-                document.getElementById("dataOutNeg").innerHTML=""+cOutNeg+"["+(cOutNeg/cOut*100).toFixed(2)+"%]";
+                if (cIn==0) {
+                    document.getElementById("dataIn").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataIn").innerHTML=""+cIn+"["+(cIn/cAll*100).toFixed(2)+"%]";
+                }
+                if (cOut==0) {
+                    document.getElementById("dataOut").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataOut").innerHTML=""+cOut+"["+(cOut/cAll*100).toFixed(2)+"%]";
+                }
+                if (cInPos==0) {
+                    document.getElementById("dataInPos").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataInPos").innerHTML=""+cInPos+"["+(cInPos/cIn*100).toFixed(2)+"%]";
+                }
+                if (cInNeu==0) {
+                    document.getElementById("dataInNeu").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataInNeu").innerHTML=""+cInNeu+"["+(cInNeu/cIn*100).toFixed(2)+"%]";
+                }
+                if (cInNeg==0) {
+                    document.getElementById("dataInNeg").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataInNeg").innerHTML=""+cInNeg+"["+(cInNeg/cIn*100).toFixed(2)+"%]";
+                }
+                if (cOutPos==0) {
+                    document.getElementById("dataOutPos").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataOutPos").innerHTML=""+cOutPos+"["+(cOutPos/cOut*100).toFixed(2)+"%]";
+                }
+                if (cOutNeu==0) {
+                    document.getElementById("dataOutNeu").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataOutNeu").innerHTML=""+cOutNeu+"["+(cOutNeu/cOut*100).toFixed(2)+"%]";
+                }
+                if (cOutNeg==0) {
+                    document.getElementById("dataOutNeg").innerHTML="0[0.00%]";
+                }
+                else{
+                    document.getElementById("dataOutNeg").innerHTML=""+cOutNeg+"["+(cOutNeg/cOut*100).toFixed(2)+"%]";
+                }
 
                 //dataRight
-                for (var i = dataInPos.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv1").innerHTML+="<p class='linePos'>"+dataInPos[i].e+"-"+dataInPos[i].i+"&nbsp;&nbsp;"+dataInPos[i].v+"</p>";
+                // for (var i = dataInPos.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv1_1").innerHTML+="<p class='linePos'>"+dataInPos[i].e+"-"+dataInPos[i].i+"&nbsp;&nbsp;"+dataInPos[i].v+"</p>";
+                // }
+                // for (var i = dataInNeu.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv1_1").innerHTML+="<p class='lineNeu'>"+dataInNeu[i].e+"-"+dataInNeu[i].i+"&nbsp;&nbsp;"+dataInNeu[i].v+"</p>";
+                // }
+                // for (var i = dataInNeg.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv1_1").innerHTML+="<p class='lineNeg'>"+dataInNeg[i].e+"-"+dataInNeg[i].i+"&nbsp;&nbsp;"+dataInNeg[i].v+"</p>";
+                // }
+                // for (var i = dataOutPos.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv2_1").innerHTML+="<p class='linePos'>"+dataOutPos[i].e+"-"+dataOutPos[i].i+"&nbsp;&nbsp;"+dataOutPos[i].v+"</p>";
+                // }
+                // for (var i = dataOutNeu.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv2_1").innerHTML+="<p class='lineNeu'>"+dataOutNeu[i].e+"-"+dataOutNeu[i].i+"&nbsp;&nbsp;"+dataOutNeu[i].v+"</p>";
+                // }
+                // for (var i = dataOutNeg.length - 1; i >= 0; i--) {
+                //     document.getElementById("drDiv2_1").innerHTML+="<p class='lineNeg'>"+dataOutNeg[i].e+"-"+dataOutNeg[i].i+"&nbsp;&nbsp;"+dataOutNeg[i].v+"</p>";
+                // }
+
+                var coundata =  [
+            "苏丹",
+            "南非",
+            "塞内加尔",
+            "塞拉利昂",
+            "科特迪瓦",
+            "索马里",
+            "喀麦隆",
+            "南苏丹",
+            "塞舌尔",
+            "几内亚",
+            "加纳",
+            "赞比亚",
+            "莫桑比克",
+            "加蓬",
+            "纳米比亚",
+            "毛里塔尼亚",
+            "安哥拉",
+            "吉布提",
+            "埃塞俄比亚",
+            "肯尼亚",
+            "尼日利亚",
+            "乍得",
+            "刚果布",
+            "津巴布韦",
+            "阿尔及利亚",
+            "坦桑尼亚",
+            "布隆迪",
+            "佛得角",
+            "乌干达",
+            "冈比亚",
+            "多哥",
+            "卢旺达",
+            "摩洛哥",
+            "马达加斯加",
+            "突尼斯",
+            "利比亚",
+            "埃及",
+            "韩国",
+            "蒙古",
+            "新加坡",
+            "东帝汶",
+            "马来西亚",
+            "缅甸",
+            "柬埔寨",
+            "越南",
+            "老挝",
+            "文莱",
+            "巴基斯坦",
+            "斯里兰卡",
+            "孟加拉国",
+            "尼泊尔",
+            "马尔代夫",
+            "阿联酋",
+            "科威特",
+            "土耳其",
+            "卡塔尔",
+            "阿曼",
+            "黎巴嫩",
+            "沙特阿拉伯",
+            "巴林",
+            "伊朗",
+            "伊拉克",
+            "阿富汗",
+            "阿塞拜疆",
+            "格鲁吉亚",
+            "亚美尼亚",
+            "哈萨克斯坦",
+            "吉尔吉斯斯坦",
+            "塔吉克斯坦",
+            "乌兹别克斯坦",
+            "泰国",
+            "印度尼西亚",
+            "菲律宾",
+            "俄罗斯",
+            "奥地利",
+            "希腊",
+            "波兰",
+            "塞尔维亚",
+            "捷克",
+            "保加利亚",
+            "斯洛伐克",
+            "阿尔巴尼亚",
+            "克罗地亚",
+            "波黑",
+            "黑山",
+            "爱沙尼亚",
+            "立陶宛",
+            "斯洛文尼亚",
+            "匈牙利",
+            "马其顿",
+            "罗马尼亚",
+            "拉脱维亚",
+            "乌克兰",
+            "白俄罗斯",
+            "摩尔多瓦",
+            "马耳他",
+            "葡萄牙",
+            "意大利",
+            "卢森堡",
+            "新西兰",
+            "巴布亚新几内亚",
+            "萨摩亚",
+            "纽埃",
+            "斐济",
+            "密克罗尼西亚联邦",
+            "库克群岛",
+            "汤加",
+            "瓦努阿图",
+            "智利",
+            "圭亚那",
+            "玻利维亚",
+            "乌拉圭",
+            "委内瑞拉",
+            "苏里南",
+            "厄瓜多尔",
+            "哥斯达黎加",
+            "巴拿马",
+            "萨尔瓦多",
+            "多米尼加",
+            "特立尼达和多巴哥",
+            "安提瓜和巴布达",
+            "多米尼克",
+            "格林纳达",
+            "巴巴多斯",
+            "古巴",
+            "牙买加"
+        ];
+                var DATAIN=[],DATAOUT=[];
+                for (var i = 0; i < dataInPos.length; i++) {
+                    DATAIN.push({
+                        e:dataInPos[i].e,
+                        i:dataInPos[i].i,
+                        c:dataInPos[i].c,
+                        v:dataInPos[i].v
+                    }); 
                 }
-                for (var i = dataInNeu.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv1").innerHTML+="<p class='lineNeu'>"+dataInNeu[i].e+"-"+dataInNeu[i].i+"&nbsp;&nbsp;"+dataInNeu[i].v+"</p>";
+                for (var i = 0; i < dataInNeu.length; i++) {
+                    DATAIN.push({
+                        e:dataInNeu[i].e,
+                        i:dataInNeu[i].i,
+                        c:dataInNeu[i].c,
+                        v:dataInNeu[i].v
+                    }); 
                 }
-                for (var i = dataInNeg.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv1").innerHTML+="<p class='lineNeg'>"+dataInNeg[i].e+"-"+dataInNeg[i].i+"&nbsp;&nbsp;"+dataInNeg[i].v+"</p>";
+                for (var i = 0; i < dataInNeg.length; i++) {
+                    DATAIN.push({
+                        e:dataInNeg[i].e,
+                        i:dataInNeg[i].i,
+                        c:dataInNeg[i].c,
+                        v:dataInNeg[i].v
+                    }); 
                 }
-                for (var i = dataOutPos.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv2").innerHTML+="<p class='linePos'>"+dataOutPos[i].e+"-"+dataOutPos[i].i+"&nbsp;&nbsp;"+dataOutPos[i].v+"</p>";
+                // console.log(DATAIN);
+                for (var i = 0; i < dataOutPos.length; i++) {
+                    DATAOUT.push({
+                        e:dataOutPos[i].e,
+                        i:dataOutPos[i].i,
+                        c:dataOutPos[i].c,
+                        v:dataOutPos[i].v
+                    }); 
                 }
-                for (var i = dataOutNeu.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv2").innerHTML+="<p class='lineNeu'>"+dataOutNeu[i].e+"-"+dataOutNeu[i].i+"&nbsp;&nbsp;"+dataOutNeu[i].v+"</p>";
+                for (var i = 0; i < dataOutNeu.length; i++) {
+                    DATAOUT.push({
+                        e:dataOutNeu[i].e,
+                        i:dataOutNeu[i].i,
+                        c:dataOutNeu[i].c,
+                        v:dataOutNeu[i].v
+                    }); 
                 }
-                for (var i = dataOutNeg.length - 1; i >= 0; i--) {
-                    document.getElementById("drDiv2").innerHTML+="<p class='lineNeg'>"+dataOutNeg[i].e+"-"+dataOutNeg[i].i+"&nbsp;&nbsp;"+dataOutNeg[i].v+"</p>";
+                for (var i = 0; i < dataOutNeg.length; i++) {
+                    DATAOUT.push({
+                        e:dataOutNeg[i].e,
+                        i:dataOutNeg[i].i,
+                        c:dataOutNeg[i].c,
+                        v:dataOutNeg[i].v
+                    }); 
+                }
+                // console.log(DATAOUT);
+                // console.log(coundata);
+                // console.log(coundata[0]);
+
+                for (var k = 0; k < coundata.length; k++) {
+                    //coundata[k]为各个国家的名称
+                    //ev-export value
+                    //iv-import value
+                    //if(coundata[k]==counName) continue;
+                    var ev_pos=0,ev_neu=0,ev_neg=0,ev_sum=0;
+                    var iv_pos=0,iv_neu=0,iv_neg=0,iv_sum=0;
+                    //coundata[k]该相关国家报导主国家的数据量按语调不同 分别累计
+                    for (var i = DATAIN.length - 1; i >= 0; i--) {
+                        if (DATAIN[i].e==coundata[k]) {
+                            switch(DATAIN[i].c){
+                                case "pos":ev_pos+=DATAIN[i].v;break;
+                                case "neu":ev_neu+=DATAIN[i].v;break;
+                                case "neg":ev_neg+=DATAIN[i].v;break;
+                            }
+                        }
+                    }
+                    //coundata[k]该相关国家被主国家报导的数据量按语调不同 分别累计
+                    for (var i = DATAOUT.length - 1; i >= 0; i--) {
+                        if (DATAOUT[i].i==coundata[k]) {
+                            switch(DATAOUT[i].c){
+                                case "pos":iv_pos+=DATAOUT[i].v;break;
+                                case "neu":iv_neu+=DATAOUT[i].v;break;
+                                case "neg":iv_neg+=DATAOUT[i].v;break;
+                            }
+                        }
+                    }
+                    //累计完成
+                    ev_sum=ev_pos+ev_neu+ev_neg;
+                    iv_sum=iv_pos+iv_neu+iv_neg;
+                    //输出
+                    if (ev_pos!=0) {
+                        document.getElementById("drDiv1_1").innerHTML+="<p class='linePos'>"+coundata[k]+"-"+DATAIN[0].i+"&nbsp;&nbsp;"+ev_pos+"["+(ev_pos/ev_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+                    if (ev_neu!=0) {
+                        document.getElementById("drDiv1_1").innerHTML+="<p class='lineNeu'>"+coundata[k]+"-"+DATAIN[0].i+"&nbsp;&nbsp;"+ev_neu+"["+(ev_neu/ev_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+                    if (ev_neg!=0) {
+                        document.getElementById("drDiv1_1").innerHTML+="<p class='lineNeg'>"+coundata[k]+"-"+DATAIN[0].i+"&nbsp;&nbsp;"+ev_neg+"["+(ev_neg/ev_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+                    if (iv_pos!=0) {
+                        document.getElementById("drDiv2_1").innerHTML+="<p class='linePos'>"+DATAOUT[0].e+"-"+coundata[k]+"&nbsp;&nbsp;"+iv_pos+"["+(iv_pos/iv_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+                    if (iv_neu!=0) {
+                        document.getElementById("drDiv2_1").innerHTML+="<p class='lineNeu'>"+DATAOUT[0].e+"-"+coundata[k]+"&nbsp;&nbsp;"+iv_neu+"["+(iv_neu/iv_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+                    if (iv_neg!=0) {
+                        document.getElementById("drDiv2_1").innerHTML+="<p class='lineNeg'>"+DATAOUT[0].e+"-"+coundata[k]+"&nbsp;&nbsp;"+iv_neg+"["+(iv_neg/iv_sum*100).toFixed(2)+"%]"+"</p>";
+                    }
+
+
                 }
             }
 

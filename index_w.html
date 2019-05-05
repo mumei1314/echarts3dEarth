@@ -316,6 +316,7 @@
         </ul>
     </div>
     <div class="overlayCountries noPointer" id="hudButtons">
+        <input type="button" value="介绍" id="btnIntro" class="searchBtn armsBtn pointer">
         <input type="button" value="查询" id="btnSearch" class="searchBtn armsBtn pointer">
         <input type="text" name="country" id="countries"
                class="countryTextInput pointer noMapDrag ui-autocomplete-input" value="中国"
@@ -580,10 +581,12 @@
                 counName=document.getElementById("countries").value;
                 window.location.href="index.html"+"?"+"c="+counName+"&"+"y="+year+"&"+cg+"_"+dg+"_"+eg+"_"+ag+"_"+gg+"_"+fg+"_"+hg+"_"+bg;
             }
-
-            // var btndrsearch=document.getElementById("btndrsearch");
-            // btndrsearch.onclick=function(e){
-            // }
+            //介绍按钮 点击事件
+            var btnIntro=document.getElementById("btnIntro");
+            btnIntro.onclick=function(e){
+                window.location.href="introCoun.html";
+            }
+            // btnIntro
         }
     </script>
     <!--输入框-->

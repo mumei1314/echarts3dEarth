@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -1109,7 +1108,7 @@
                                 opacity: 0.6
                             },
                             data: convertData(Data[i])// 特效的起始、终点位置，一个二维数组，相当于coords: convertData(item[1])
-                        });
+                    });
                 }
                 myChart.setOption({
                     backgroundColor: 'rgba(3,28,72,0.3)',
@@ -1125,7 +1124,10 @@
                         bottom: 0,
                         boundingCoords: [[-180, 90], [180, -90]],
                         zoom:0,
-                        roam: false,
+                        roam: true,
+                        //silent:false,
+                        //selectedMode:'multiple',//地图板块选中 多选
+
                         itemStyle: {
                             borderColor:'#000d2d',
                             normal: {
@@ -1164,6 +1166,9 @@
                     series:series
                 };
                 echarts.init(document.getElementById("container")).setOption(option, true);
+                myChart.on('click', function (params) {//板块 点击事件
+                    renovateData(params.name,20190410,1,1,1,1,1,1,1,1,myChart);
+                });
             });
 
             //设置时间条圆点位置
